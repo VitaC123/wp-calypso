@@ -109,3 +109,27 @@
 .edit-gravatar__unverified-user .gravatar {
 	opacity: 0.33;
 }
+
+.edit-gravatar .drop-zone {
+	border-radius: 50%;
+	width: 150px;
+	height: 150px;
+	border: 0;
+}
+
+.edit-gravatar .drop-zone__content {
+	font-size: 1em;
+}
+
+.edit-gravatar .drop-zone__content-text {
+	padding: 0 1em;
+}
+
+.edit-gravatar .drop-zone.is-active ~ .edit-gravatar__label-container {
+	visibility: hidden;
+}
+
+.edit-gravatar .drop-zone .gridicon {
+	height: 36px;
+	width: 36px;
+}
