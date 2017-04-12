@@ -223,4 +223,26 @@ describe( 'edits-reducer', () => {
 
 		expect( edits.creates[ 0 ].attributes[ 0 ].name ).to.eql( 'Not a variation' );
 	} );
+
+	it( 'should set currentlyEditing when editing a new product', () => {
+		const edits1 = reducer( undefined, editProduct( null, {
+			name: 'A new product',
+		} ) );
+
+		expect( edits1.currentlyEditing ).to.eql( { productId: { index: 0 } } );
+
+		const edits2 = reducer( edits1, editProduct( null, {
+			name: 'Second product',
+		} ) );
+
+		expect( edits2.currentlyEditing ).to.eql( { productId: { index: 1 } } );
+	} );
+
+	it( 'should set currentlyEditing when editing an existing product', () => {
+		const product1 = { id: 1 };
+		const edits1 = reducer( undefined, editProduct( product1, {
+			name: 'First product',
+		} ) );
+		expect( edits1.currentlyEditing ).to.eql( { productId: 1 } );
+	} );
 } );
