@@ -13,6 +13,7 @@ import Gridicon from 'gridicons';
  */
 import { PLAN_BUSINESS, FEATURE_UPLOAD_PLUGINS, FEATURE_UPLOAD_THEMES } from 'lib/plans/constants';
 import { isBusiness, isEnterprise } from 'lib/products-values';
+import PageViewTracker from 'lib/analytics/page-view-tracker';
 import { getEligibility, isEligibleForAutomatedTransfer } from 'state/automated-transfer/selectors';
 import { isJetpackSite } from 'state/sites/selectors';
 import { getSelectedSite } from 'state/ui/selectors';
@@ -36,6 +37,8 @@ export const EligibilityWarnings = ( {
 	siteId,
 	siteSlug,
 	translate,
+	analyticsPath,
+	analyticsPageTitle,
 } ) => {
 	const context = includes( backUrl, 'plugins' ) ? 'plugins' : 'themes';
 
@@ -54,7 +57,7 @@ export const EligibilityWarnings = ( {
 	return (
 		<div className={ classes }>
 			<QueryEligibility siteId={ siteId } />
-
+			<PageViewTracker path={ analyticsPath } title={ analyticsPageTitle } />
 			{ ! hasBusinessPlan && ! isJetpack &&
 				<Banner
 					description={ translate( 'Also get unlimited themes, advanced customization, no ads, live chat support, and more.' ) }
@@ -133,10 +136,13 @@ EligibilityWarnings.propTypes = {
 	onProceed: PropTypes.func,
 	backUrl: PropTypes.string,
 	translate: PropTypes.func,
+	analyticsPath: PropTypes.string,
+	analyticsPageTitle: PropTypes.string,
 };
 
 EligibilityWarnings.defaultProps = {
 	onProceed: noop,
+	analyticsPageTitle: '',
 };
 
 const mapStateToProps = state => {

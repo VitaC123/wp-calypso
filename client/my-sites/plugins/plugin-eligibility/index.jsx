@@ -53,6 +53,7 @@ class PluginEligibility extends Component {
 				<EligibilityWarnings
 					onProceed={ this.pluginTransferInitiate }
 					backUrl={ this.getBackUrl() }
+					analyticsPath='/plugins/:plugin/eligibility/:site_id'
 				/>
 			</MainComponent>
 		);
