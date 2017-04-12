@@ -11,6 +11,9 @@ import i18n from 'i18n-calypso';
 import Dialog from 'components/dialog';
 import FormButton from 'components/forms/form-button';
 import Spinner from 'components/spinner';
+import userFactory from 'lib/user';
+
+const user = userFactory();
 
 class VerifyEmailDialog extends React.Component {
 	constructor( props ) {
@@ -34,7 +37,7 @@ class VerifyEmailDialog extends React.Component {
 
 		this.setState( { pendingRequest: true } );
 
-		this.props.user.sendVerificationEmail( function( error, response ) {
+		user.sendVerificationEmail( function( error, response ) {
 			this.setState( {
 				emailSent: response && response.success,
 				error: error,
@@ -48,7 +51,7 @@ class VerifyEmailDialog extends React.Component {
 			return i18n.translate( 'Email Sent' );
 		}
 		if ( this.state.pendingRequest ) {
-			return <Spinner className="post-editor__confirmation-dialog-spinner" />;
+			return <Spinner className="email-verification__confirmation-dialog-spinner" />;
 		}
 		return i18n.translate( 'Resend Email' );
 	}
@@ -75,15 +78,17 @@ class VerifyEmailDialog extends React.Component {
 		const strings = {
 			confirmHeading: i18n.translate( 'Please confirm your email address' ),
 
-			confirmExplanation: i18n.translate( 'We sent you an email when you first signed up. Please open the message and click the blue button.' ),
+			confirmExplanation: i18n.translate( 'We sent you an email when you first signed up.' +
+				'Please open the message and click the blue button.' ),
 
-			confirmReasoning: i18n.translate( 'Email confirmation allows us to assist when recovering your account in the event you forget your password.' ),
+			confirmReasoning: i18n.translate( 'Email confirmation allows us to assist when recovering' +
+				'your account in the event you forget your password.' ),
 
 			confirmEmail: i18n.translate(
 				'{{wrapper}}%(email)s{{/wrapper}} {{emailPreferences}}change{{/emailPreferences}}',
 				{
 					components: {
-						wrapper: <span className="post-editor__confirmation-dialog-email-wrapper" />,
+						wrapper: <span className="email-verification__confirmation-dialog-email-wrapper" />,
 						emailPreferences: <a href="/me/account" />
 					},
 					args: {
@@ -97,12 +102,12 @@ class VerifyEmailDialog extends React.Component {
 			<Dialog
 				isVisible={ true }
 				buttons={ this.getDialogButtons() }
-				additionalClassNames="post-editor__confirmation-dialog is-narrow"
+				additionalClassNames="email-verification__confirmation-dialog is-narrow"
 			>
-				<h1 className="post-editor__confirmation-dialog-heading is-variable-height">{ strings.confirmHeading }</h1>
-				<p className="post-editor__confirmation-dialog-email">{ strings.confirmEmail }</p>
-				<p className="post-editor__confirmation-dialog-explanation">{ strings.confirmExplanation }</p>
-				<p className="post-editor__confirmation-dialog-reasoning">{ strings.confirmReasoning }</p>
+				<h1 className="email-verification__confirmation-dialog-heading is-variable-height">{ strings.confirmHeading }</h1>
+				<p className="email-verification__confirmation-dialog-email">{ strings.confirmEmail }</p>
+				<p className="email-verification__confirmation-dialog-explanation">{ strings.confirmExplanation }</p>
+				<p className="email-verification__confirmation-dialog-reasoning">{ strings.confirmReasoning }</p>
 			</Dialog>
 		);
 	}

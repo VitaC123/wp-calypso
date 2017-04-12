@@ -46,7 +46,7 @@ describe( 'EditGravatar', function() {
 		FilePicker = require( 'components/file-picker' );
 		Gravatar = require( 'components/gravatar' ).default;
 		ImageEditor = require( 'blocks/image-editor' );
-		VerifyEmailDialog = require( 'post-editor/verify-email-dialog' );
+		VerifyEmailDialog = require( 'components/email-verification/verify-email-dialog' );
 	} );
 
 	describe( 'component rendering', () => {

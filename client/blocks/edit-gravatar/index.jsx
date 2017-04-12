@@ -33,7 +33,7 @@ import {
 import ImageEditor from 'blocks/image-editor';
 import InfoPopover from 'components/info-popover';
 import ExternalLink from 'components/external-link';
-import VerifyEmailDialog from 'post-editor/verify-email-dialog';
+import VerifyEmailDialog from 'components/email-verification/verify-email-dialog';
 
 /**
  * Module dependencies
