@@ -330,7 +330,8 @@ class Upload extends React.Component {
 					version="4.7" /> }
 				{ showEligibility && <EligibilityWarnings
 					backUrl={ backPath }
-					onProceed={ this.onProceedClick } /> }
+					onProceed={ this.onProceedClick }
+					analyticsPath="/themes/upload/:site_id" /> }
 				{ ! upgradeJetpack && ! showEligibility && this.renderUploadCard() }
 			</Main>
 		);
