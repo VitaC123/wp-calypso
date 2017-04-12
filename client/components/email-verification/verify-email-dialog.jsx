@@ -78,10 +78,10 @@ class VerifyEmailDialog extends React.Component {
 		const strings = {
 			confirmHeading: i18n.translate( 'Please confirm your email address' ),
 
-			confirmExplanation: i18n.translate( 'We sent you an email when you first signed up.' +
+			confirmExplanation: i18n.translate( 'We sent you an email when you first signed up. ' +
 				'Please open the message and click the blue button.' ),
 
-			confirmReasoning: i18n.translate( 'Email confirmation allows us to assist when recovering' +
+			confirmReasoning: i18n.translate( 'Email confirmation allows us to assist when recovering ' +
 				'your account in the event you forget your password.' ),
 
 			confirmEmail: i18n.translate(
