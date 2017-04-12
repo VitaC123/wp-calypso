@@ -101,4 +101,11 @@
 	margin-bottom: -2px;
 	margin-left: 1px;
 	transform: scale(calc( 14 / 18 )); // change from 18x18px to 14x14px
+
+.edit-gravatar__unverified-user .file-picker {
+	pointer-events: none;
+}
+
+.edit-gravatar__unverified-user .gravatar {
+	opacity: 0.33;
 }

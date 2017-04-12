@@ -33,6 +33,7 @@ import {
 import ImageEditor from 'blocks/image-editor';
 import InfoPopover from 'components/info-popover';
 import ExternalLink from 'components/external-link';
+import VerifyEmailDialog from 'post-editor/verify-email-dialog';
 
 /**
  * Module dependencies
@@ -44,7 +45,8 @@ export class EditGravatar extends Component {
 		super( ...arguments );
 		this.state = {
 			isEditingImage: false,
-			image: false
+			image: false,
+			showEmailVerificationNotice: false,
 		};
 	}
 
@@ -157,6 +159,33 @@ export class EditGravatar extends Component {
 		}
 	}
 
+	renderEmailVerificationNotice = () => {
+		const user = {
+			data: this.props.user
+		};
+		return (
+			<VerifyEmailDialog
+				user={ user }
+				onClose={ this.closeVerifyEmailDialog }
+			/>
+		);
+	}
+
+	handleClick = () => {
+		if ( this.props.user.email_verified ) {
+			return;
+		}
+		this.setState( () => ( {
+			showEmailVerificationNotice: true
+		} ) );
+	}
+
+	closeVerifyEmailDialog = () => {
+		this.setState( () => ( {
+			showEmailVerificationNotice: false
+		} ) );
+	}
+
 	render() {
 		const {
 			isUploading,
@@ -167,33 +196,46 @@ export class EditGravatar extends Component {
 		// use imgSize = 400 for caching
 		// it's the popular value for large Gravatars in Calypso
 		const GRAVATAR_IMG_SIZE = 400;
+		const icon = ( user.email_verified ? 'cloud-upload' : 'notice' );
+		const buttonText = ( user.email_verified
+			? translate( 'Click to change photo' )
+			: translate( 'Verify email first' )
+		);
 		return (
-			<div className="edit-gravatar">
-				{ this.renderImageEditor() }
-				<FilePicker accept="image/*" onPick={ this.onReceiveFile }>
-					<div
-						className={
-							classnames( 'edit-gravatar__image-container',
-								{ 'is-uploading': isUploading }
-							)
-						}
-					>
-						<Gravatar
-							imgSize={ GRAVATAR_IMG_SIZE }
-							size={ 150 }
-							user={ user }
-						/>
-						{ ! isUploading && (
-							<div className="edit-gravatar__label-container">
-								<Gridicon icon="cloud-upload" size={ 36 } />
-								<span className="edit-gravatar__label">
-									{ this.props.translate( 'Click to change photo' ) }
-								</span>
-							</div>
-						) }
-						{ isUploading && <Spinner className="edit-gravatar__spinner" /> }
+			<div
+				className={
+					classnames( 'edit-gravatar',
+						{ 'is-uploading': isUploading },
+						{ 'edit-gravatar__unverified-user': ! user.email_verified }
+					)
+				}
+			>
+				<div onClick={ this.handleClick }>
+					{ this.state.showEmailVerificationNotice && this.renderEmailVerificationNotice() }
+					{ this.renderImageEditor() }
+					<FilePicker accept="image/*" onPick={ this.onReceiveFile }>
+						<div
+							className={
+								classnames( 'edit-gravatar__image-container',
+									{ 'is-uploading': isUploading }
+								)
+							}
+						>
+							<Gravatar
+								imgSize={ GRAVATAR_IMG_SIZE }
+								size={ 150 }
+								user={ user }
+							/>
+							{ ! isUploading && (
+								<div className="edit-gravatar__label-container">
+									<Gridicon icon={ icon } size={ 36 } />
+									<span className="edit-gravatar__label">{ buttonText }</span>
+									</div>
+								) }
+								{ isUploading && <Spinner className="edit-gravatar__spinner" /> }
 						</div>
-				</FilePicker>
+					</FilePicker>
+				</div>
 				<div>
 					<p className="edit-gravatar__explanation">Your profile photo is public.</p>
 					<InfoPopover
