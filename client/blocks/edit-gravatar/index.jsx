@@ -159,7 +159,7 @@ export class EditGravatar extends Component {
 		}
 	}
 
-	renderEmailVerificationNotice = () => {
+	renderEmailVerificationNotice() {
 		const user = {
 			data: this.props.user
 		};
