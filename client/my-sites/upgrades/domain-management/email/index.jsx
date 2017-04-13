@@ -24,6 +24,7 @@ import {
 	getSelectedDomain
 } from 'lib/domains';
 import { isPlanFeaturesEnabled } from 'lib/plans';
+import { hasCustomDomain } from 'lib/site/utils';
 
 const Email = React.createClass( {
 	propTypes: {
@@ -126,16 +127,30 @@ const Email = React.createClass( {
 		return <GoogleAppsUsersCard { ...this.props } />;
 	},
 
+	renderEmailForwarding() {
+		let domain;
+
+		if ( this.props.selectedDomainName ) {
+			domain = this.props.selectedDomainName;
+		} else if ( hasCustomDomain( this.props.selectedSite ) ) {
+			domain = this.props.selectedSite.domain;
+		}
+
+		return (
+			domain && <VerticalNav>
+				<VerticalNavItem
+					path={ paths.domainManagementEmailForwarding( this.props.selectedSite.slug, domain ) }>
+					{ this.translate( 'Email Forwarding' ) }
+				</VerticalNavItem>
+			</VerticalNav>
+		);
+	},
+
 	addGoogleAppsCard() {
 		return (
 			<div>
 				<AddGoogleAppsCard { ...this.props } />
-				{ this.props.selectedDomainName && <VerticalNav>
-					<VerticalNavItem
-						path={ paths.domainManagementEmailForwarding( this.props.selectedSite.slug, this.props.selectedDomainName ) }>
-						{ this.translate( 'Email Forwarding' ) }
-					</VerticalNavItem>
-				</VerticalNav> }
+				{ this.renderEmailForwarding() }
 			</div>
 		);
 	},
