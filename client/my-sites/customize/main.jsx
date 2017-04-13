@@ -61,6 +61,13 @@ var Customize = React.createClass( {
 		this.cancelWaitingTimer();
 	},
 
+	componentWillReceiveProps: function() {
+		const { site, isJetpack };
+		if ( this.props.isJetpack ) {
+			page.redirect( this.props.site.options.admin_url + 'customize.php?autofocus[panel]=nav_menus' );
+		}
+	}
+
 	canUserCustomizeDomain: function() {
 		const { site } = this.props;
 		if ( ! site ) {
