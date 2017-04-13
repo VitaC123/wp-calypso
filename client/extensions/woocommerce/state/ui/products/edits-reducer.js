@@ -1,25 +1,22 @@
 /**
  * External dependencies
  */
-import { isNumber } from 'lodash';
-import debugFactory from 'debug';
+import { isNumber, uniqueId } from 'lodash';
 
 /**
  * Internal dependencies
  */
 import {
 	WOOCOMMERCE_EDIT_PRODUCT,
-	WOOCOMMERCE_EDIT_PRODUCT_VARIATION_TYPE,
+	WOOCOMMERCE_EDIT_PRODUCT_ATTRIBUTE,
 } from '../../action-types';
-
-const debug = debugFactory( 'woocommerce:state:ui:products' );
 
 const initialState = null;
 
 export default function( state = initialState, action ) {
 	const handlers = {
 		[ WOOCOMMERCE_EDIT_PRODUCT ]: editProductAction,
-		[ WOOCOMMERCE_EDIT_PRODUCT_VARIATION_TYPE ]: editProductVariationTypeAction,
+		[ WOOCOMMERCE_EDIT_PRODUCT_ATTRIBUTE ]: editProductAttributeAction,
 	};
 
 	const handler = handlers[ action.type ];
@@ -37,13 +34,13 @@ function editProductAction( edits, action ) {
 	return { ...prevEdits, [ bucket ]: _array };
 }
 
-function editProductVariationTypeAction( edits, action ) {
-	const { product, attributeIndex, data } = action.payload;
+function editProductAttributeAction( edits, action ) {
+	const { product, attribute, data } = action.payload;
 	const attributes = product && product.attributes;
 
 	const prevEdits = edits || {};
 	const bucket = product && isNumber( product.id ) && 'updates' || 'creates';
-	const _attributes = editProductVariationType( attributes, attributeIndex, data );
+	const _attributes = editProductAttribute( attributes, attribute, data );
 	const _array = editProduct( prevEdits[ bucket ], product, { attributes: _attributes } );
 
 	return { ...prevEdits, [ bucket ]: _array };
@@ -74,17 +71,25 @@ function editProduct( array, product, data ) {
 	return _array;
 }
 
-function editProductVariationType( attributes, attributeIndex, data ) {
+function editProductAttribute( attributes, attribute, data ) {
 	const prevAttributes = attributes || [];
-	const index = ( isNumber( attributeIndex ) ? attributeIndex : prevAttributes.length );
+	const uid = attribute && attribute.uid || uniqueId( 'edit_' );
 
-	const _attributes = [ ...prevAttributes ];
-	const prevAttribute = prevAttributes[ index ] || { variation: true, options: [] };
+	let found = false;
 
-	if ( prevAttribute.variation ) {
-		_attributes[ index ] = { ...prevAttribute, ...data };
-	} else {
-		debug( 'WARNING: Attempting to edit a non-variation attribute as a variation type.' );
+	// Look for this attribute in the array of attributes first.
+	const _attributes = prevAttributes.map( ( a ) => {
+		if ( uid === a.uid ) {
+			found = true;
+			return { ...a, ...data };
+		}
+
+		return a;
+	} );
+
+	if ( ! found ) {
+		// Attribute has not yet been edited, so add it now.
+		_attributes.push( { ...data, uid } );
 	}
 
 	return _attributes;
