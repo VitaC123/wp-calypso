@@ -51,6 +51,7 @@ var Customize = React.createClass( {
 	},
 
 	componentWillMount: function() {
+		this.redirectToJetpackCustomizer( this.props.site );
 		this.listenToCustomizer();
 		this.waitForLoading();
 		window.scrollTo( 0, 0 );
@@ -61,12 +62,15 @@ var Customize = React.createClass( {
 		this.cancelWaitingTimer();
 	},
 
-	componentWillReceiveProps: function() {
-		const { site, isJetpack };
-		if ( this.props.isJetpack ) {
-			page.redirect( this.props.site.options.admin_url + 'customize.php?autofocus[panel]=nav_menus' );
+	componentWillReceiveProps: function( nextProps ) {
+		this.redirectToJetpackCustomizer( nextProps.site );
+	},
+
+	redirectToJetpackCustomizer: function( site ) {
+		if ( site && site.jetpack ) {
+			page( site.options.admin_url + 'customize.php?autofocus[panel]=nav_menus' );
 		}
-	}
+	},
 
 	canUserCustomizeDomain: function() {
 		const { site } = this.props;
